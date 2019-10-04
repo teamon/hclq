@@ -2,7 +2,10 @@ builds:
 - env:
   - CGO_ENABLED=0
 archives:
-- replacements:
+- format: gz
+  files:
+    - none* # do not include README
+  replacements:
     darwin: Darwin
     linux: Linux
     windows: Windows
