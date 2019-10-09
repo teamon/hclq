@@ -155,7 +155,16 @@ func (c *converter) convertStringPart(expr hclsyntax.Expression) (string, error)
 		if err != nil {
 			return "", err
 		}
-		return s.AsString(), nil
+
+		str := s.AsString()
+		switch str {
+		case "${":
+			str = "$${"
+		case "%{":
+			str = "%%{"
+		}
+
+		return str, nil
 	case *hclsyntax.TemplateExpr:
 		return c.convertTemplate(v)
 	case *hclsyntax.TemplateWrapExpr:

@@ -48,6 +48,13 @@ locals {
 		%{if true ? false : true}"gotcha"\n%{else}4%{endif}
 	EOF
 }
+
+nested "with" "labels" {
+	x = 1
+	escaped1 = "$${notvar}"
+	escaped2 = "this-is-not-$${var}-no-no"
+	escaped3 = "%%{var}"
+}
 `
 
 const expectedJSON = `{
@@ -85,7 +92,17 @@ const expectedJSON = `{
 			"heredoc2": "\t\tAnother heredoc, that\n\t\tdoesn't remove indentation\n\t\t${local.other.3}\n\t\t%{if true ? false : true}\"gotcha\"\\n%{else}4%{endif}\n",
 			"simple": "${4 - 2}"
 		}
-	]
+	],
+	"nested": {
+		"with": {
+			"labels": {
+				"escaped1": "$${notvar}",
+				"escaped2": "this-is-not-$${var}-no-no",
+				"escaped3": "%%{var}",
+				"x": 1
+			}
+		}
+	}
 }`
 
 // Test that conversion works as expected
